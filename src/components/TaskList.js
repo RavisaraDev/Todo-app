@@ -2,58 +2,58 @@ import React, {useContext} from "react";
 import {useObserver} from "mobx-react";
 import styled from "styled-components";
 
-const TodoCard = styled.div`
-   display: flex;
-   align-items: center;
-   justify-content: space-between;
-   padding: 21px 10px;
-   border-radius: 10px;
-   background-color: #414745;
-   margin-bottom: 10px;
-   color: #ffff
+import Done from '../assets/done.svg'
+import Pending from '../assets/pending.svg'
+import Close from '../assets/close.svg'
+
+const Card = styled.div`
+  width: 219px;
+  padding: 5px 16px;
+  color: white;
+  margin-bottom: 10px;
+  background-color: #414745;
+  border-radius: 10px;
+  text-decoration: none;
+  margin: 25px 0;
+
+  .status {
+    text-transform: uppercase;
+    font-weight: bold;
+  }
   
-  p{
-    margin: 0px 10px;
+  .doneTag{
+    color: #00ff9f;
+  }
+  
+  .pendingTag{
+    color: #ffbf00;;
   }
 `;
 
-const TodoNameContainer = styled.div`
-   width: 25rem;
-`;
-
-const StateContainer = styled.div`
-  width: 7rem;
-`;
-
-const TodoButtonContainer = styled.div`
-  width: 10rem;
-`;
-
-const Pending = styled.div`
-   background-color: #ff9900c7;
-   padding: 5px 10px;
-   border-radius: 5px;
-   width: fit-content;
-}
-`;
-
-const Done = styled.div`
-   background-color: #0ad752;;
-   padding: 5px 10px;
-   border-radius: 5px;
-   width: fit-content;
-}
-`;
-
-const Button = styled.button`
-  background-color: #787878;
-  border-radius: 6px;
-  padding: 8px 28px;
-  font-weight: 900;
-  color: #ffff;
-  border: none;
-  outline: none;
-  margin: 5px;
+const ActionBar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
+  position: relative;
+  left: 196px;
+  bottom: 17px;
+  background-color: #242424;
+  padding: 4px 6px;
+  border-radius: 40px;
+  
+  .btn{
+    background-color: #ffffff8a;
+    border-radius: 30px;
+    padding: 1px 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .actionIcon{
+    width: 20px;
+  }
 `;
 
 export const TaskList = ({storeContext}) => {
@@ -62,26 +62,27 @@ export const TaskList = ({storeContext}) => {
     return useObserver(() => (
         <>
             {store.tasks.map(task => (
-                <TodoCard>
-                    <TodoNameContainer>
-                        <p>
-                            {task.name}
-                        </p>
-                    </TodoNameContainer>
-                    <StateContainer>
-                        {task.state === true ? <Done>Done</Done> : <Pending>Pending</Pending>}
-                    </StateContainer>
-                    <TodoButtonContainer>
-                        {task.state === true ? <Button type="submit" onClick={e => {
-                            store.changeState(task.id)
-                        }}>Make pending
-                        </Button> : <Button type="submit" onClick={e => {
-                            store.changeState(task.id)
-                        }}>Make done
-                        </Button>}
-                    </TodoButtonContainer>
-                </TodoCard>
+                <>
+                    <Card key={task.id}>
+                        <ActionBar>
+                            {task.state === true ? <a className="btn" type="submit" onClick={e => {
+                                store.changeState(task.id)
+                            }}><img className="actionIcon" src={Pending}  alt="pending-icon"/>
+                            </a> : <a className="btn" type="submit" onClick={e => {
+                                store.changeState(task.id)
+                            }}><img className="actionIcon" src={Done}  alt="done-icon"/>
+                            </a>}&nbsp;&nbsp;
+                            <a className="btn" type="submit" onClick={e => {
+                                store.removeTask(task.id)
+                            }}><img className="actionIcon" src={Close}  alt="done-icon"/>
+                            </a>
+                        </ActionBar>
+                        <span className="status">{task.state === true ? <span className="doneTag">done</span> : <span className="pendingTag">pending</span>}</span>
+                        <p>{task.name}</p>
+                    </Card>
+                </>
             ))}
+
         </>
     ));
 };

@@ -29,12 +29,19 @@ const StoreProvider = ({ children }) => {
       },
       {
         id: 2,
-        name: "Finish web-design",
+        name: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
         state: false
       }
     ],
     addTask: task => {
       taskStore.tasks.push({
+        id: taskStore.tasks.length + 1,
+        name: task,
+        state: false
+      });
+    },
+    removeTask: task => {
+      taskStore.tasks.pop({
         id: taskStore.tasks.length + 1,
         name: task,
         state: false
@@ -55,10 +62,8 @@ export default function App() {
     <StoreProvider>
       <Wrapper>
         <Title>TODO 🌿️</Title>
-        <div>
         <AddTask storeContext={StoreContext} />
         <TaskList storeContext={StoreContext} />
-        </div>
       </Wrapper>
     </StoreProvider>
   ));
